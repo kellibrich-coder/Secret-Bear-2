@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2f3b2f" />
+  <meta name="description" content="Secret Bear — a private bear-themed social deduction game for 5–10 friends." />
+  <title>Secret Bear 🐻</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div class="brand-mark" aria-hidden="true">🐻</div>
+      <div>
+        <p class="eyebrow">private game night</p>
+        <h1>Secret Bear</h1>
+        <p class="tagline">Trust no bear. Protect the honey.</p>
+      </div>
+    </header>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <section id="homeView" class="view">
+      <div class="card intro-card">
+        <h2>Enter the forest</h2>
+        <p>Everyone opens this page on their own phone. One person creates a den; everyone else joins with the five-character code.</p>
+        <label class="field">
+          <span>Your name</span>
+          <input id="nameInput" autocomplete="nickname" maxlength="22" placeholder="Kelli" />
+        </label>
+        <div class="home-actions">
+          <button id="createBtn" class="btn btn-primary">Create a den</button>
+          <div class="join-row">
+            <input id="roomCodeInput" class="code-input" inputmode="text" maxlength="5" autocomplete="off" autocapitalize="characters" placeholder="CODE" aria-label="Den code" />
+            <button id="joinBtn" class="btn btn-secondary">Join</button>
+          </div>
+        </div>
+        <p class="microcopy">Best with FaceTime/Discord for talking. Keep this screen private when secret information appears.</p>
+      </div>
+    </section>
+
+    <section id="gameView" class="view hidden" aria-live="polite">
+      <div class="room-strip">
+        <div>
+          <span class="label">Den code</span>
+          <strong id="roomCodeDisplay" class="room-code">—</strong>
+        </div>
+        <div id="connectionBadge" class="connection-pill">connecting…</div>
+      </div>
+
+      <section id="lobbySection" class="card hidden">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">waiting room</p>
+            <h2>The Den</h2>
+          </div>
+          <span id="lobbyCount" class="counter">0/10</span>
+        </div>
+        <div id="lobbyPlayers" class="player-list"></div>
+        <div id="lobbyHostControls" class="stack hidden">
+          <button id="startBtn" class="btn btn-primary">Start Secret Bear</button>
+          <p id="startHint" class="microcopy"></p>
+        </div>
+        <button id="leaveBtn" class="btn btn-ghost">Leave den</button>
+      </section>
+
+      <section id="gameBoard" class="hidden">
+        <section id="roleCard" class="role-card card">
+          <button id="roleToggle" class="role-cover" type="button" aria-expanded="false">
+            <span class="lock">🔒</span>
+            <span>Tap to reveal your secret role</span>
+            <small>Hide it before showing anyone your phone.</small>
+          </button>
+          <div id="roleReveal" class="role-reveal hidden">
+            <p class="eyebrow">your secret role</p>
+            <div id="roleEmoji" class="role-emoji">🐻</div>
+            <h2 id="roleTitle">—</h2>
+            <p id="roleDescription"></p>
+            <div id="knownBears" class="known-bears"></div>
+            <button id="hideRoleBtn" class="btn btn-ghost" type="button">Hide role</button>
+          </div>
+        </section>
+
+        <section class="score-card card">
+          <div class="policy-group">
+            <div class="policy-label"><span>🍯 Honey</span><strong id="honeyCount">0 / 5</strong></div>
+            <div id="honeyTrack" class="policy-track honey-track" aria-label="Honey policy track"></div>
+          </div>
+          <div class="policy-group">
+            <div class="policy-label"><span>🐻 Grizzly</span><strong id="grizzlyCount">0 / 6</strong></div>
+            <div id="grizzlyTrack" class="policy-track grizzly-track" aria-label="Grizzly policy track"></div>
+          </div>
+          <div class="chaos-row">
+            <span>🌩️ Chaos tracker</span>
+            <div id="chaosTrack" class="chaos-track" aria-label="Failed government tracker"></div>
+          </div>
+        </section>
+
+        <section class="card status-card">
+          <p id="phaseKicker" class="eyebrow">current turn</p>
+          <h2 id="phaseTitle">Waiting…</h2>
+          <p id="phaseText"></p>
+          <div id="actionArea" class="action-area"></div>
+        </section>
+
+        <section id="intelCard" class="card hidden">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">eyes only</p>
+              <h2>Your private intel</h2>
+            </div>
+            <span>🔐</span>
+          </div>
+          <div id="intelList" class="intel-list"></div>
+        </section>
+
+        <section class="card roster-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">around the campfire</p>
+              <h2>Players</h2>
+            </div>
+            <span id="livingCount" class="counter"></span>
+          </div>
+          <div id="gamePlayers" class="player-list"></div>
+        </section>
+
+        <section class="card log-card">
+          <details>
+            <summary>Forest history</summary>
+            <div id="logList" class="log-list"></div>
+          </details>
+        </section>
+
+        <section id="gameOverCard" class="card game-over hidden">
+          <div id="winnerEmoji" class="winner-emoji">🏆</div>
+          <p class="eyebrow">game over</p>
+          <h2 id="winnerTitle">—</h2>
+          <p id="winnerReason"></p>
+          <button id="againBtn" class="btn btn-primary hidden">Back to the den</button>
+        </section>
+      </section>
+    </section>
+
+    <footer>
+      <p>Unofficial, noncommercial bear-themed adaptation of <em>Secret Hitler</em> by Mike Boxleiter, Tommy Maranges &amp; Mac Schubert. Original and adaptation licensed CC BY-NC-SA 4.0.</p>
+    </footer>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
